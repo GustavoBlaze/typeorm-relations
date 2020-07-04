@@ -6,23 +6,22 @@ import {
   JoinColumn,
   PrimaryGeneratedColumn,
   ManyToOne,
-  ManyToMany,
 } from 'typeorm';
 
 import Order from '@modules/orders/infra/typeorm/entities/Order';
 import Product from '@modules/products/infra/typeorm/entities/Product';
 
-@Entity('order_products')
+@Entity('orders_products')
 class OrdersProducts {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(_ => Order, order => order.order_products)
-  @JoinColumn({ name: 'order_id' })
+  @ManyToOne(() => Order, order => order.order_products)
+  @JoinColumn({ name: 'order_id', referencedColumnName: 'id' })
   order: Order;
 
-  @ManyToMany(_ => Product, product => product.order_products)
-  @JoinColumn({ name: 'product_id' })
+  @ManyToOne(() => Product, product => product.order_products)
+  @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
   product: Product;
 
   @Column()
@@ -31,10 +30,10 @@ class OrdersProducts {
   @Column()
   order_id: string;
 
-  @Column('float')
+  @Column({ type: 'numeric', scale: 2, precision: 10 })
   price: number;
 
-  @Column('int')
+  @Column()
   quantity: number;
 
   @CreateDateColumn()
